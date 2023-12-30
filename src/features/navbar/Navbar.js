@@ -3,7 +3,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { faBars, faTimes, faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-
+import Logo from "../../images/Logo.png";
 const user = {
   name: "Tom Cook",
   email: "tom@example.com",
@@ -34,11 +34,9 @@ const Navbar = ({ children }) => {
               <div className="flex h-16 items-center justify-between">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <img
-                      className="h-8 w-8"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                      alt="Your Company"
-                    />
+                   <Link to='/'>
+                   <img className="h-8 w-8" src={Logo} alt="Your Company" />
+                   </Link>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
@@ -62,20 +60,23 @@ const Navbar = ({ children }) => {
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-4 flex items-center md:ml-6">
-                    <button
-                      type="button"
-                      className="relative 
+                    <Link to="/Cart">
+                      <button
+                        type="button"
+                        className="relative 
                       rounded-full bg-gray-800 
                        p-1 text-gray-400 hover:text-white focus:outline-none"
-                    >
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">View notifications</span>
-                      <FontAwesomeIcon
-                        icon={faCartPlus}
-                        className="h-6 w-6"
-                        aria-hidden="true"
-                      />
-                    </button>
+                      >
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">View notifications</span>
+                        <FontAwesomeIcon
+                          icon={faCartPlus}
+                          className="h-6 w-6"
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </Link>
+
                     <span
                       className="inline-flex items-center rounded-md mb-6 -ml-2 bg-gray-800 px-2 py-1 text-xs
              font-medium text-green-500 ring-1 ring-inset ring-green-600/10"
@@ -109,7 +110,7 @@ const Navbar = ({ children }) => {
                           {userNavigation.map((item) => (
                             <Menu.Item key={item.name}>
                               {({ active }) => (
-                                <Link 
+                                <Link
                                   href={item.href}
                                   className={classNames(
                                     active ? "bg-gray-100" : "",
@@ -185,7 +186,8 @@ const Navbar = ({ children }) => {
                       {user.email}
                     </div>
                   </div>
-                  <button
+                 <Link to='/Cart'>
+                 <button
                     type="button"
                     className="relative 
                     rounded-full bg-gray-800 p-1 
@@ -199,6 +201,7 @@ const Navbar = ({ children }) => {
                       aria-hidden="true"
                     />
                   </button>
+                 </Link>
                   <span
                     className="inline-flex items-center rounded-md mb-6 -ml-2 bg-gray-800 px-2 py-1 text-xs
              font-medium text-green-500 ring-1 ring-inset ring-green-600/10"

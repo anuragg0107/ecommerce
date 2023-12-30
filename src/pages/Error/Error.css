@@ -5,7 +5,6 @@
   justify-content: center;
   align-items: center;
   margin-left: 160px;
-  /* margin-top: 20px; */
 }
 
 .page_404 img {
@@ -13,7 +12,7 @@
 }
 
 .four_zero_four_bg {
-  background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+  background-image: url("../../images/ErrorPage.gif");
   height: 400px;
   background-position: center;
 }
@@ -39,6 +38,6 @@
 
 @media (max-width: 768px) {
   .page_404{
-    margin-left: 0; /* Remove left margin on mobile view */
+    margin-left: 0;
   }
   }

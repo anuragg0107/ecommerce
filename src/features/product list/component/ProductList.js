@@ -1,7 +1,6 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { increment, incrementAsync, selectCount } from "./ProductListSlice";
+import {fetchAllProductsAsync , selectAllProducts } from "../ProductListSlice";
 import { Fragment } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,61 +11,12 @@ import {
   faTh,
   faFilter,
   faTimes,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
-import Pagination from "../../pages/Pagination/Pagination";
+import Pagination from "../../../pages/Pagination/Pagination";
+import { Link } from "react-router-dom";
 
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 2,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 3,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 4,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-  {
-    id: 5,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-];
+
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
   { name: "Best Rating", href: "#", current: false },
@@ -77,38 +27,46 @@ const sortOptions = [
 
 const filters = [
   {
-    id: "color",
-    name: "Color",
-    options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
-    ],
+    id: "brand",
+    name: "Brand",
+    options:[
+      { value: 'Apple', label: 'Apple', cheked: false },
+      { value: 'Samsung', label: 'Samsung', cheked: false },
+      { value: 'OPPO', label: 'OPPO', cheked: false },
+      { value: 'Huawei', label: 'Huawei', cheked: false },
+      { value: 'Infinix', label: 'Infinix', cheked: false },
+      { value: 'HP Pavilion', label: 'HP Pavilion', cheked: false },
+      { value: 'Microsoft Surface', label: 'Microsoft Surface', cheked: false },
+      { value: 'Royal_Mirage', label: 'Royal_Mirage', cheked: false },
+      { value: 'Impression of Acqua Di Gio', label: 'Impression of Acqua Di Gio', cheked: false },
+      { value: 'Lord - Al-Rehab', label: 'Lord - Al-Rehab', cheked: false },
+      { value: "L'Oreal Paris", label: "L'Oreal Paris", cheked: false },
+      { value: 'Hemani Tea', label: 'Hemani Tea', cheked: false },
+      { value: 'Dermive', label: 'Dermive', cheked: false },
+      { value: 'ROREC White Rice', label: 'ROREC White Rice', cheked: false },
+      { value: 'Fair & Clear', label: 'Fair & Clear', cheked: false },
+      { value: 'Saaf & Khaas', label: 'Saaf & Khaas', cheked: false },
+      { value: 'Bake Parlor Big', label: 'Bake Parlor Big', cheked: false },
+      { value: 'Baking Food Items', label: 'Baking Food Items', cheked: false },
+      { value: 'fauji', label: 'fauji', cheked: false },
+      { value: 'Dry Rose', label: 'Dry Rose', cheked: false },
+      { value: 'Boho Decor', label: 'Boho Decor', cheked: false },
+      { value: 'Flying Wooden', label: 'Flying Wooden', cheked: false },
+      { value: 'LED Lights', label: 'LED Lights', cheked: false },
+      { value: 'luxury palace', label: 'luxury palace', cheked: false },
+      { value: 'G olden', label: 'G olden', cheked: false }
+    ]
+    ,
   },
   {
     id: "category",
     name: "Category",
     options: [
-      { value: "new-arrivals", label: "New Arrivals", checked: false },
-      { value: "sale", label: "Sale", checked: false },
-      { value: "travel", label: "Travel", checked: true },
-      { value: "organization", label: "Organization", checked: false },
-      { value: "accessories", label: "Accessories", checked: false },
-    ],
-  },
-  {
-    id: "size",
-    name: "Size",
-    options: [
-      { value: "2l", label: "2L", checked: false },
-      { value: "6l", label: "6L", checked: false },
-      { value: "12l", label: "12L", checked: false },
-      { value: "18l", label: "18L", checked: false },
-      { value: "20l", label: "20L", checked: false },
-      { value: "40l", label: "40L", checked: true },
+      { value: "smartphones", label: "Smartphones", checked: false },
+      { value: "laptops", label: "Laptop", checked: false },
+      { value: "fragrances", label: "Fragrances", checked: false },
+      { value: "groceries", label: "Groceries", checked: false },
+      { value: "home-decoration", label: "Home-Decoration", checked: false },
     ],
   },
 ];
@@ -118,10 +76,17 @@ function classNames(...classes) {
 }
 
 export default function ProductList() {
-  const count = useSelector(selectCount);
   const dispatch = useDispatch();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const products = useSelector(selectAllProducts)
 
+  useEffect(()=>{
+    dispatch(fetchAllProductsAsync())
+  },[dispatch])
+  
+  const handleFilter =(e,section,option) =>{
+  console.log(section.id,option.vlaue)
+  }
   return (
     <div className="bg-white">
       <div>
@@ -214,6 +179,7 @@ export default function ProductList() {
                                       defaultValue={option.value}
                                       type="checkbox"
                                       defaultChecked={option.checked}
+                                      onChange={e =>console.log(e.target.value)}
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                     />
                                     <label
@@ -368,6 +334,7 @@ export default function ProductList() {
                                   defaultValue={option.value}
                                   type="checkbox"
                                   defaultChecked={option.checked}
+                                  onChange={e =>handleFilter(e,section,option)}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                                 <label
@@ -396,11 +363,15 @@ export default function ProductList() {
 
                     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                       {products.map((product) => (
-                        <div key={product.id} className="group relative">
-                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                        <Link to='/Singleproduct'>
+                        <div key={product.id} className="group relative rounded-md border-solid border-2 p-2 border-gray-200">
+                          <div className=" min-h-60
+                          aspect-h-1 aspect-w-1 
+                          w-full overflow-hidden
+                           rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-60">
                             <img
-                              src={product.imageSrc}
-                              alt={product.imageAlt}
+                              src={product.thumbnail}
+                              alt={product.title}
                               className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                             />
                           </div>
@@ -416,14 +387,21 @@ export default function ProductList() {
                                 </a>
                               </h3>
                               <p className="mt-1 text-sm text-gray-500">
-                                {product.color}
+                              <FontAwesomeIcon icon={faStar} aria-hidden='true' />  <span className="align-bottom">{product.rating}</span>
                               </p>
                             </div>
-                            <p className="text-sm font-medium text-gray-900">
-                              {product.price}
+                          <div>
+                          <p className="text-sm block font-medium text-black-900">
+                              $ {Math.round(product.price*(1- product.discountPercentage)/100)}
                             </p>
+                          <p className="text-sm block line-through font-medium text-gray-500">
+                              $ {product.price}
+                            </p>
+                          
+                          </div>
                           </div>
                         </div>
+                        </Link>
                       ))}
                     </div>
                   </div>
